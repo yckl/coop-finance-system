@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: 农业合作社综合财务业务管理系统
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/coop_finance_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      initialization-fail-timeout: -1
+      maximum-pool-size: 10
+      minimum-idle: 2
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  system-name: 农业合作社综合财务业务管理系统（农村信用社综合财务业务管理系统）
+  default-accounts:
+    admin: admin/123456
+    finance: caiwu/123456
+    user: user/123456
+  jwt:
+    secret: 4A8D3F9E1B2C5A7D8F9A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0B1C2D3
+    expiration: 86400000
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
