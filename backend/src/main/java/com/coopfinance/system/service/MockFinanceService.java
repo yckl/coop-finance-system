@@ -291,7 +291,7 @@ public class MockFinanceService {
                 row("id", "MSG1002", "留言人", "王建国", "类型", "投诉", "内容", "取款等待时间偏长", "状态", "处理中", "提交时间", now())
         ));
         modules.put("admin-reimbursements", listOf(
-                row("id", "RB1001", "单号", "BX20260401001", "申请人", "李玉兰", "报销类型", "农资采购", "金额", "1860.00", "状态", "待审核", "提交时间", now(), "审核轨迹", "待财务审核"),
+                row("id", "RB1001", "单号", "BX20260401001", "申请人", "李玉兰", "报销类型", "农资采购", "金额", "1860.00", "状态", "待审核", "提交时间", now(), "审核轨迹", "待财务人员"),
                 row("id", "RB1002", "单号", "BX20260401002", "申请人", "王建国", "报销类型", "差旅报销", "金额", "980.00", "状态", "已通过", "提交时间", now(), "审核轨迹", "管理员终审通过")
         ));
         modules.put("admin-analysis", listOf(
@@ -451,7 +451,7 @@ public class MockFinanceService {
         titles.put("dictionaries", "字典与基础配置管理");
         titles.put("announcements", "公告管理");
         titles.put("messages", "留言与反馈管理");
-        titles.put("reimbursements", "报销与审核总控");
+        titles.put("reimbursements", "报销与审核");
         titles.put("analysis", role.equals("finance") ? "报表分析与可视化分析" : "财务总览与经营分析");
         titles.put("security", "系统安全与审计");
         titles.put("balances", "余额查询");

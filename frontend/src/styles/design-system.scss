@@ -1,0 +1,49 @@
+:root {
+  /* 基础金融蓝（浅色模式） */
+  --color-primary: #0052cc;
+  --color-primary-light: #4c9aff;
+  --color-success: #00c9a7;
+  --color-warning: #f6c343;
+  --color-danger: #ea4335;
+  --color-bg: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f8fafc;
+  --color-text: #172b4d;
+  --color-text-secondary: #5e6c84;
+  --color-border: #dfe1e6;
+  
+  --shadow-sm: 0 4px 12px rgba(9, 30, 66, 0.05);
+  --shadow-md: 0 8px 24px rgba(9, 30, 66, 0.08);
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+// 开启暗黑模式时的颜色反转逻辑
+html.dark {
+  --color-primary: #4c9aff;
+  --color-primary-light: #0052cc;
+  --color-bg: #0a1128; // 深邃的夜间金融蓝
+  --color-surface: #172b4d;
+  --color-surface-hover: #203558;
+  --color-text: #b3bac5;
+  --color-text-secondary: #8993a4;
+  --color-border: #253858;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+// 全局基础动画拦截与通用样式
+* { 
+  box-sizing: border-box; 
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }

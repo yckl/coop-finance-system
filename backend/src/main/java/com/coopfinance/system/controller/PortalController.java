@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
+import com.coopfinance.system.model.ReimbursementRequest;
+import com.coopfinance.system.model.AuditRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -66,14 +68,27 @@ public class PortalController {
         return ApiResponse.success(financeService.askAi(role, request.question()));
     }
 
-    @GetMapping("/finance/account/{userNo}")
-    public ApiResponse<?> queryAccount(@PathVariable String userNo) {
+    @GetMapping("/{role}/account/{userNo}")
+    public ApiResponse<?> queryAccount(@PathVariable String role, @PathVariable String userNo) {
         return ApiResponse.success(financeService.queryAccount(userNo));
     }
 
-    @PostMapping("/finance/transaction/{kind}")
-    public ApiResponse<?> submitTransaction(@PathVariable String kind, @Valid @RequestBody TransactionRequest request) {
+    @PostMapping("/{role}/transaction/{kind}")
+    public ApiResponse<?> submitTransaction(@PathVariable String role, @PathVariable String kind, @Valid @RequestBody TransactionRequest request) {
         return ApiResponse.success("业务办理成功", financeService.submitTransaction(kind, request));
+    }
+
+    @PostMapping("/{role}/reimbursement/apply")
+    public ApiResponse<?> applyReimbursement(@PathVariable String role, @Valid @RequestBody ReimbursementRequest request, HttpServletRequest hr) {
+        String username = (String) hr.getAttribute("username");
+        String fullName = (String) hr.getAttribute("name");
+        return ApiResponse.success(financeService.applyReimbursement(role, username, fullName, request));
+    }
+
+    @PostMapping("/{role}/reimbursement/audit")
+    public ApiResponse<?> auditReimbursement(@PathVariable String role, @Valid @RequestBody AuditRequest request, HttpServletRequest hr) {
+        String fullName = (String) hr.getAttribute("name");
+        return ApiResponse.success(financeService.auditReimbursement(role, fullName, request));
     }
 
     @GetMapping("/{role}/export/{module}")

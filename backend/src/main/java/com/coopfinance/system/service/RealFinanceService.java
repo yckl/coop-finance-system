@@ -4,20 +4,18 @@ import com.coopfinance.system.common.JwtUtil;
 import com.coopfinance.system.mapper.CommonMapper;
 import com.coopfinance.system.mapper.DashboardMapper;
 import com.coopfinance.system.mapper.SysUserMapper;
+import com.coopfinance.system.model.AuditRequest;
+import com.coopfinance.system.model.ReimbursementRequest;
 import com.coopfinance.system.model.TransactionRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class RealFinanceService {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final SysUserMapper sysUserMapper;
     private final CommonMapper commonMapper;
     private final DashboardMapper dashboardMapper;
@@ -228,6 +226,33 @@ public class RealFinanceService {
         sysUserMapper.insertTransactionRecord(transMap);
 
         return Map.of("message", "业务办理成功", "serialNo", serialNo, "balanceAfter", nextBalance);
+    }
+
+    public Map<String, Object> applyReimbursement(String role, String username, String fullName, ReimbursementRequest request) {
+        String serialNo = "RB" + System.currentTimeMillis();
+        String type = request.type();
+        BigDecimal amount = request.amount();
+        String url = request.url() == null ? "" : request.url();
+        
+        commonMapper.executeSelect("INSERT INTO reimbursement_order (reimbursement_no, applicant_name, reimbursement_type, amount, process_status, attachment_url) " +
+                "VALUES ('" + serialNo + "', '" + fullName + "', '" + type + "', " + amount + ", '待审核', '" + url + "')");
+                
+        commonMapper.executeSelect("INSERT INTO audit_log (operator_name, module, action, status) VALUES ('" + fullName + "', '报销业务', '发起了 " + amount + " 元的 [" + type + "] 报销申请', '成功')");
+        
+        return Map.of("message", "报销申请已提交", "serialNo", serialNo);
+    }
+
+    public Map<String, Object> auditReimbursement(String role, String fullName, AuditRequest request) {
+        String result = request.result();
+        String no = request.reimbursementNo();
+        String comment = request.comment() == null ? "" : request.comment();
+        
+        String status = "通过".equals(result) ? ( "admin".equals(role) ? "已结款" : "复核中" ) : "已驳回";
+        commonMapper.executeSelect("UPDATE reimbursement_order SET process_status='" + status + "', audit_comment='" + comment + "' WHERE reimbursement_no='" + no + "'");
+        
+        commonMapper.executeSelect("INSERT INTO audit_log (operator_name, module, action, status) VALUES ('" + fullName + "', '审核中心', '对单号 " + no + " 进行了 [" + result + "] 审核', '成功')");
+        
+        return Map.of("message", "审核意见已录入", "status", status);
     }
 
     public Map<String, Object> exportModule(String role, String module) {
